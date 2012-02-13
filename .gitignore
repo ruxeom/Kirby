@@ -1,0 +1,6 @@
+*.cache
+*.exe
+*.ico
+*.png
+*.csproj
+*.user
