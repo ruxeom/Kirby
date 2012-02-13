@@ -16,76 +16,74 @@ namespace Kirby
     /// </summary>
     public class KirbyGame : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        GraphicsDeviceManager Graphics;
+        SpriteBatch Spritebatch;
+        Rectangle Viewport;
+        GameObject Player;
+        Stage Stage;
 
         public KirbyGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            Spritebatch = new SpriteBatch(GraphicsDevice);
+            Viewport = new Rectangle(
+               Graphics.GraphicsDevice.Viewport.X,
+               Graphics.GraphicsDevice.Viewport.Y,
+               Graphics.GraphicsDevice.Viewport.Width,
+               Graphics.GraphicsDevice.Viewport.Height);
 
             // TODO: use this.Content to load your game content here
+            Player = new GameObject(new Vector2(0, 0), Content.Load<Texture2D>("Sprites\\Terrain\\Grass"));
+
+            GameLoader loader = new GameLoader(this.Content);
+            this.Stage = loader.LoadStage("C:\\Users\\Fofo\\Documents\\Visual Studio 2010\\Projects\\Kirby\\Kirby\\KirbyContent\\GamePropeties\\Stage1.txt", this.Viewport);
+
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            GraphicsDevice.Clear(Color.SkyBlue);
+            Spritebatch.Begin();
+            
+            DrawStage();
+            Spritebatch.End();
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        public void DrawStage()
+        {
+            foreach (GameObject terrain in Stage.Terrain)
+                Spritebatch.Draw(terrain.Sprite, terrain.Position, Color.White);
         }
     }
 }
