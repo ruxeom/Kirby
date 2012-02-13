@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Kirby
 {
-    class State
+    public class State
     {
         public static int STANDING     = 0;
         public static int WALKING      = 1;
@@ -20,7 +20,7 @@ namespace Kirby
         public static int DYING       = 10;
     }
 
-    class Direction
+    public class Direction
     {
         public static int UP = 11;
         public static int DOWN = 12;

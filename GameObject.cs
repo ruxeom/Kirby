@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Kirby
 {
-    class GameObject
+    public class GameObject
     {
         public Vector2 Position;
         public Texture2D Sprite;
@@ -61,7 +61,7 @@ namespace Kirby
         }
     }
 
-    class Character : GameObject
+    public class Character : GameObject
     {
         int MaxHealth;
         int CurrentHealth;

@@ -4,3 +4,9 @@
 *.png
 *.csproj
 *.user
+*.pdb
+*.xnb
+*.user
+*.cachefile
+*.xml
+*.txt
