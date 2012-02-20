@@ -47,6 +47,14 @@ namespace Kirby
             }
         }
 
+        public Vector2 Center
+        {
+            get 
+            {
+                return new Vector2(Position.X + Width / 2, Position.Y + Height / 2);
+            }
+        }
+
         public void Move(int dx, int dy)
         {
             this.Position.X += dx;
@@ -87,7 +95,7 @@ namespace Kirby
         int MaxHealth;
         int CurrentHealth;
         int Defense;
-        int MaxHeight;
+        public int MaxHeight;
 
         public Character(Vector2 position, Texture2D sprite)
             : base(position, sprite)
