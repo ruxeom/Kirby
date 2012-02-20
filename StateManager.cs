@@ -78,6 +78,11 @@ namespace Kirby
             player.Move(dx, dy);
         }
 
+        public void ManageEnemyStates(List<GameObject> terrain, List<Enemy> enemies, Character player)
+        {
+            //TODO: Manage player/enemy interaction and enemy states.
+        }
+
         public void ManageFloorStates(List<GameObject> terrain, Character player, ref Rectangle viewport)
         {            
             foreach (GameObject tile in terrain)

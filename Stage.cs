@@ -30,6 +30,12 @@ namespace Kirby
             this.Terrain.Add(terrain);
         }
 
+        public void AddEnemy(Enemy enemy)
+        {
+            enemy.AddState(State.SOLID);
+            this.Enemies.Add(enemy);
+        }
+
         public void AddState(int state)
         {
             if (!this.HasState(state))

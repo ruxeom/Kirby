@@ -92,8 +92,8 @@ namespace Kirby
 
     public class Character : GameObject
     {
-        int MaxHealth;
-        int CurrentHealth;
+        public int MaxHealth;
+        public int CurrentHealth;
         int Defense;
         public int MaxHeight;
 

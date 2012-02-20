@@ -62,7 +62,7 @@ namespace Kirby
             GameLoader loader = new GameLoader(this.Content);
             Manager = new StateManager();
 
-            this.Stage = loader.LoadStage("C:\\Users\\Fofo\\Documents\\Visual Studio 2010\\Projects\\Kirby\\Kirby\\KirbyContent\\GamePropeties\\Stage1.txt", this.Viewport);
+            this.Stage = loader.LoadStage("GameProperties\\Stage1.txt", this.Viewport);
             Player = new Character(Stage.StartPosition, Content.Load<Texture2D>("Sprites\\Kirby\\KirbyStandingR"));
             Player.Move(0, -Player.Height);
 
@@ -78,6 +78,7 @@ namespace Kirby
                 this.Exit();
 
             Manager.ManagePlayerStates(Player, Keyboard.GetState(PlayerIndex.One).GetPressedKeys());
+            Manager.ManageEnemyStates(Stage.Terrain, Stage.Enemies, Player);
             Manager.ManageFloorStates(Stage.Terrain, Player, ref Viewport);
             Manager.ManageViewPortStates(Stage, Player, ref Viewport);
             //Stage.ScreenDisplacement.X -= 2;
@@ -93,6 +94,7 @@ namespace Kirby
             //Enemy2.Draw(this.Spritebatch);
             
             DrawStage();
+            DrawEnemies();
             DrawPlayer();
             DrawStats();
             Batch.End();
@@ -103,12 +105,18 @@ namespace Kirby
         public void DrawStage()
         {
             foreach (GameObject terrain in Stage.Terrain)
-                Batch.Draw(terrain.Sprite, Vector2.Add(terrain.Position,Stage.ScreenDisplacement), Color.White);
+                Batch.Draw(terrain.Sprite, Vector2.Add(terrain.Position, Stage.ScreenDisplacement), Color.White);
         }
 
         public void DrawPlayer()
         {
             Batch.Draw(Player.Sprite, Vector2.Add(Player.Position,Stage.ScreenDisplacement), Color.White);
+        }
+
+        public void DrawEnemies()
+        {
+            foreach (Enemy enemy in Stage.Enemies)
+                Batch.Draw(enemy.Sprite, Vector2.Add(enemy.Position, Stage.ScreenDisplacement), Color.White);
         }
 
         public void DrawStats()

@@ -12,26 +12,27 @@ namespace Kirby
 {
     class PropertyReader
     {
-        TextReader reader;
+        TextReader Reader;
+        string Root;
 
-        public PropertyReader()
+        public PropertyReader(string root)
         {
-            
+            Root = root;
         }
 
-        public Dictionary<String, String> ReadStageProperties(String stagename)
+        public Dictionary<String, String> ReadPropertieFile(String filename)
         {
-            reader = new StreamReader(stagename);            
+            Reader = new StreamReader(Root + filename);            
             string line;
             string[] splitline;
-            Dictionary<String,String> stageprops = new Dictionary<String,String>();
-            while ((line = reader.ReadLine()) != null)
+            Dictionary<String,String> props = new Dictionary<String,String>();
+            while ((line = Reader.ReadLine()) != null)
             {
                 char [] reg = {' '};
                 splitline = line.Split(reg, 2);
-                stageprops.Add(splitline[0], splitline[1]);
+                props.Add(splitline[0], splitline[1]);
             }
-            return stageprops;
+            return props;
 
         }
     }
