@@ -108,12 +108,12 @@ namespace Kirby
 
         public void DrawPlayer()
         {
-            Batch.Draw(Player.Sprite, Player.Position, Color.White);
+            Batch.Draw(Player.Sprite, Vector2.Add(Player.Position,Stage.ScreenDisplacement), Color.White);
         }
 
         public void DrawStats()
         {
-            Batch.DrawString(Content.Load<SpriteFont>("elFont"), Player.Center.X.ToString(), new Vector2(0, 0), Color.Blue);
+            Batch.DrawString(Content.Load<SpriteFont>("elFont"), Player.Center.X.ToString() + "," + Player.Center.Y.ToString(), new Vector2(0, 0), Color.Blue);
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Viewport.Center.X.ToString(), new Vector2(0, 20), Color.Blue);
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Stage.ScreenDisplacement.X.ToString(), new Vector2(0, 40), Color.Blue);
         }

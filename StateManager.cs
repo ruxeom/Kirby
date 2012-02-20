@@ -82,13 +82,13 @@ namespace Kirby
         {            
             foreach (GameObject tile in terrain)
             {
+                //Vector2 playercenter = player.Center;
+                //Vector2 floorcenter;
                 //if the tile is on-screen
-                Vector2 playercenter = player.Center;
-                Vector2 floorcenter;
                 if (viewport.Intersects(tile.BoundingBox))
                     if (player.BoundingBox.Intersects(tile.BoundingBox) && tile.HasState(State.SOLID))
                     {
-                        floorcenter = tile.Center;
+                        //floorcenter = tile.Center;
                         if (player.HasState(State.FALLING))
                         {
                             player.AddState(State.STANDING);
@@ -109,9 +109,11 @@ namespace Kirby
                 if (dx > 0)
                 {
                     stage.ScreenDisplacement.X -= dx;
-                    viewport.X -= dx;
+                    viewport.X += dx;
                     stage.RemoveState(State.FACELEFT);
                 }
+                else if (player.Position.X < 0)
+                    player.Position.X = 0;
             }
             else if (stage.HasState(State.FACERIGHT))
             {
@@ -119,21 +121,24 @@ namespace Kirby
                 if (dx < 0)
                 {
                     stage.ScreenDisplacement.X -= dx;
-                    viewport.X -= dx;
+                    viewport.X += dx;
                     stage.RemoveState(State.FACERIGHT);
                 }
+                else if (player.Position.X > stage.Length - player.Width)
+                    player.Position.X = stage.Length - player.Width;
             }
             else
             {
                 if (player.Center.X < viewport.Width / 2)
                 {
                     stage.AddState(State.FACELEFT);
-                    viewport.X = 0;
+                    stage.ScreenDisplacement.X = viewport.X = 0;
                 }
                 else if (player.Center.X > stage.Length - viewport.Width / 2)
                 {
                     stage.AddState(State.FACERIGHT);
-                    viewport.X = stage.Length - viewport.X;
+                    viewport.X = stage.Length - viewport.Width;
+                    stage.ScreenDisplacement.X = viewport.Width - stage.Length;
                 }
                 else
                 {
