@@ -23,6 +23,9 @@ namespace Kirby
         Character Player;
         Stage Stage;
 
+        /*Sprite Enemy;
+        Sprite Enemy2;*/
+
         public KirbyGame()
         {
             Graphics = new GraphicsDeviceManager(this);
@@ -31,7 +34,13 @@ namespace Kirby
 
         protected override void Initialize()
         {
-            base.Initialize();
+            /*Enemy = new Sprite();
+            Enemy.scale = 1.0f;
+
+            Enemy2 = new Sprite();
+            Enemy2.scale = 1.0f;*/
+
+            base.Initialize();        
         }
 
         protected override void LoadContent()
@@ -43,6 +52,12 @@ namespace Kirby
                Graphics.GraphicsDevice.Viewport.Y,
                Graphics.GraphicsDevice.Viewport.Width,
                Graphics.GraphicsDevice.Viewport.Height);
+
+            //Loading and positioning the enemies
+            /*Enemy.LoadContent(this.Content, "Sprites\\enemy"); //O tambien a [...]\\Dropbox\\Sprites\\enemy
+            Enemy.Position = new Vector2(300, 370);
+            Enemy2.LoadContent(this.Content, "Sprites\\enemy");
+            Enemy2.Position = new Vector2(550, 220);*/
 
             // TODO: use this.Content to load your game content here
 
@@ -77,6 +92,9 @@ namespace Kirby
         {
             GraphicsDevice.Clear(Color.LightGreen);
             Spritebatch.Begin();
+
+            //Enemy.Draw(this.Spritebatch);
+            //Enemy2.Draw(this.Spritebatch);
             
             DrawStage();
             DrawPlayer();
