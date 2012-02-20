@@ -78,15 +78,15 @@ namespace Kirby
             player.Move(dx, dy);
         }
 
-        public void ManageFloorStates(List<GameObject> terrain, Character player, Rectangle viewport)
-        {
+        public void ManageFloorStates(List<GameObject> terrain, Character player, ref Rectangle viewport)
+        {            
             foreach (GameObject tile in terrain)
             {
                 //if the tile is on-screen
                 Vector2 playercenter = player.Center;
                 Vector2 floorcenter;
                 if (viewport.Intersects(tile.BoundingBox))
-                    if (player.BoundingBox.Intersects(tile.BoundingBox))
+                    if (player.BoundingBox.Intersects(tile.BoundingBox) && tile.HasState(State.SOLID))
                     {
                         floorcenter = tile.Center;
                         if (player.HasState(State.FALLING))
@@ -101,9 +101,47 @@ namespace Kirby
 
         }
 
-        public void ManageJumpStates()
+        public void ManageViewPortStates(Stage stage, Character player, ref Rectangle viewport)
         {
- 
+            if (stage.HasState(State.FACELEFT))
+            {
+                int dx = (int)(player.Center.X - viewport.Center.X);
+                if (dx > 0)
+                {
+                    stage.ScreenDisplacement.X -= dx;
+                    viewport.X -= dx;
+                    stage.RemoveState(State.FACELEFT);
+                }
+            }
+            else if (stage.HasState(State.FACERIGHT))
+            {
+                int dx = (int)(player.Center.X - viewport.Center.X);
+                if (dx < 0)
+                {
+                    stage.ScreenDisplacement.X -= dx;
+                    viewport.X -= dx;
+                    stage.RemoveState(State.FACERIGHT);
+                }
+            }
+            else
+            {
+                if (player.Center.X < viewport.Width / 2)
+                {
+                    stage.AddState(State.FACELEFT);
+                    viewport.X = 0;
+                }
+                else if (player.Center.X > stage.Length - viewport.Width / 2)
+                {
+                    stage.AddState(State.FACERIGHT);
+                    viewport.X = stage.Length - viewport.X;
+                }
+                else
+                {
+                    int dx = (int)(player.Center.X - viewport.Center.X);
+                    stage.ScreenDisplacement.X -= dx;
+                    viewport.X += dx;
+                }
+            }
         }
 
     }

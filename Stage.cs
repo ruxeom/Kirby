@@ -6,13 +6,14 @@ using Microsoft.Xna.Framework;
 
 namespace Kirby
 {
-    class Stage : IStateable
+    public class Stage : IStateable
     {
         public List<GameObject> Terrain;
         public List<Enemy> Enemies;
         public List<int> StateList;
         public int Length;
         public int Height;
+        public Vector2 ScreenDisplacement;
         public Vector2 StartPosition;
 
         public Stage()
@@ -20,6 +21,7 @@ namespace Kirby
             Terrain = new List<GameObject>();
             Enemies = new List<Enemy>();
             StateList = new List<int>();
+            ScreenDisplacement = new Vector2(0, 0);
         }
 
         public void AddTerrain(GameObject terrain)

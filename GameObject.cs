@@ -101,6 +101,7 @@ namespace Kirby
             : base(position, sprite)
         {
             AddState(State.STANDING);
+            AddState(State.FACERIGHT);
         }        
 
     }

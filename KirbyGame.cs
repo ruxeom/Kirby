@@ -11,14 +11,12 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Kirby
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
+
     public class KirbyGame : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager Graphics;
-        SpriteBatch Spritebatch;
-        StateManager Statemanager;
+        SpriteBatch Batch;
+        StateManager Manager;
         Rectangle Viewport;
         Character Player;
         Stage Stage;
@@ -46,7 +44,7 @@ namespace Kirby
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            Spritebatch = new SpriteBatch(GraphicsDevice);
+            Batch = new SpriteBatch(GraphicsDevice);
             Viewport = new Rectangle(
                Graphics.GraphicsDevice.Viewport.X,
                Graphics.GraphicsDevice.Viewport.Y,
@@ -62,43 +60,42 @@ namespace Kirby
             // TODO: use this.Content to load your game content here
 
             GameLoader loader = new GameLoader(this.Content);
-            Statemanager = new StateManager();
+            Manager = new StateManager();
 
             this.Stage = loader.LoadStage("C:\\Users\\Fofo\\Documents\\Visual Studio 2010\\Projects\\Kirby\\Kirby\\KirbyContent\\GamePropeties\\Stage1.txt", this.Viewport);
-            Player = new Character(Stage.StartPosition, Content.Load<Texture2D>("Sprites\\Kirby\\KirbyInhaling"));
+            Player = new Character(Stage.StartPosition, Content.Load<Texture2D>("Sprites\\Kirby\\KirbyStandingR"));
             Player.Move(0, -Player.Height);
 
         }
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
         }
 
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            
             if (Keyboard.GetState(PlayerIndex.One).GetPressedKeys().Contains<Keys>(Keys.Escape))
                 this.Exit();
 
-            Statemanager.ManagePlayerStates(Player, Keyboard.GetState(PlayerIndex.One).GetPressedKeys());
-            Statemanager.ManageFloorStates(Stage.Terrain, Player, Viewport);
-
+            Manager.ManagePlayerStates(Player, Keyboard.GetState(PlayerIndex.One).GetPressedKeys());
+            Manager.ManageFloorStates(Stage.Terrain, Player, ref Viewport);
+            Manager.ManageViewPortStates(Stage, Player, ref Viewport);
+            //Stage.ScreenDisplacement.X -= 2;
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightGreen);
-            Spritebatch.Begin();
+            Batch.Begin();
 
             //Enemy.Draw(this.Spritebatch);
             //Enemy2.Draw(this.Spritebatch);
             
             DrawStage();
             DrawPlayer();
-            Spritebatch.End();
+            DrawStats();
+            Batch.End();
 
             base.Draw(gameTime);
         }
@@ -106,12 +103,19 @@ namespace Kirby
         public void DrawStage()
         {
             foreach (GameObject terrain in Stage.Terrain)
-                Spritebatch.Draw(terrain.Sprite, terrain.Position, Color.White);
+                Batch.Draw(terrain.Sprite, Vector2.Add(terrain.Position,Stage.ScreenDisplacement), Color.White);
         }
 
         public void DrawPlayer()
         {
-            Spritebatch.Draw(Player.Sprite, Player.Position, Color.White);
+            Batch.Draw(Player.Sprite, Player.Position, Color.White);
+        }
+
+        public void DrawStats()
+        {
+            Batch.DrawString(Content.Load<SpriteFont>("elFont"), Player.Center.X.ToString(), new Vector2(0, 0), Color.Blue);
+            Batch.DrawString(Content.Load<SpriteFont>("elFont"), Viewport.Center.X.ToString(), new Vector2(0, 20), Color.Blue);
+            Batch.DrawString(Content.Load<SpriteFont>("elFont"), Stage.ScreenDisplacement.X.ToString(), new Vector2(0, 40), Color.Blue);
         }
     }
 }
