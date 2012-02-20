@@ -8,7 +8,7 @@ namespace Kirby
     public class State
     {
         public static int STANDING     = 0;
-        public static int WALKING      = 1;
+        public static int MOVING       = 1;
         public static int JUMPING      = 2;
         public static int FALLING      = 3;
         public static int TAKINGDAMAGE = 4;
@@ -18,6 +18,9 @@ namespace Kirby
         public static int SPITTING     = 8;
         public static int ALIVE        = 9;
         public static int DYING       = 10;
+        public static int SOLID       = 11;
+        public static int FACELEFT    = 12;
+        public static int FACERIGHT   = 13;
     }
 
     public class Direction

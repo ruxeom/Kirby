@@ -5,14 +5,16 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Collections.Generic;
 
 namespace Kirby
 {
-    public class GameObject
+    public class GameObject : IStateable
     {
         public Vector2 Position;
         public Texture2D Sprite;
         public int ContactDamage;
+        public List<int> StateList;
         public Rectangle BoundingBox
         {
             get
@@ -48,7 +50,7 @@ namespace Kirby
         public void Move(int dx, int dy)
         {
             this.Position.X += dx;
-            this.Position.X += dy;
+            this.Position.Y += dy;
         }
 
         public GameObject(Vector2 position, Texture2D sprite)
@@ -58,6 +60,25 @@ namespace Kirby
             else
                 Position.X = Position.Y = 0;
             this.Sprite = sprite;
+            this.StateList = new List<int>();
+        }
+
+        public void AddState(int state)
+        {
+            if (!this.HasState(state))
+                StateList.Add(state);
+        }
+
+        public bool HasState(int state)
+        {
+            if (StateList.Contains(state))
+                return true;
+            return false;
+        }
+
+        public void RemoveState(int state)
+        {
+            StateList.Remove(state);
         }
     }
 
@@ -66,22 +87,13 @@ namespace Kirby
         int MaxHealth;
         int CurrentHealth;
         int Defense;
-        //State
+        int MaxHeight;
 
         public Character(Vector2 position, Texture2D sprite)
             : base(position, sprite)
-        { }
-
-        public void AddState()
-        { }
-
-        public bool HasState()
         {
-            return false;
-        }
-
-        public void RemoveState()
-        { }
+            AddState(State.STANDING);
+        }        
 
     }
 

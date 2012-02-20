@@ -40,7 +40,7 @@ namespace Kirby
                 {
                     string[] coords = pair[j].Split(',');
                     Vector2 realcoords = GetRealCoordenates(coords, viewport.Bottom);
-                    stage.Terrain.Add(new GameObject(realcoords, Content.Load<Texture2D>("Sprites\\Terrain\\" + terrain[i])));
+                    stage.AddTerrain(new GameObject(realcoords, Content.Load<Texture2D>("Sprites\\Terrain\\" + terrain[i])));
                 }
             }
 

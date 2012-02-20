@@ -18,8 +18,9 @@ namespace Kirby
     {
         GraphicsDeviceManager Graphics;
         SpriteBatch Spritebatch;
+        StateManager Statemanager;
         Rectangle Viewport;
-        GameObject Player;
+        Character Player;
         Stage Stage;
 
         public KirbyGame()
@@ -44,10 +45,13 @@ namespace Kirby
                Graphics.GraphicsDevice.Viewport.Height);
 
             // TODO: use this.Content to load your game content here
-            Player = new GameObject(new Vector2(0, 0), Content.Load<Texture2D>("Sprites\\Terrain\\Grass"));
 
             GameLoader loader = new GameLoader(this.Content);
+            Statemanager = new StateManager();
+
             this.Stage = loader.LoadStage("C:\\Users\\Fofo\\Documents\\Visual Studio 2010\\Projects\\Kirby\\Kirby\\KirbyContent\\GamePropeties\\Stage1.txt", this.Viewport);
+            Player = new Character(Stage.StartPosition, Content.Load<Texture2D>("Sprites\\Kirby\\KirbyStanding"));
+            Player.Move(0, -Player.Height);
 
         }
 
@@ -59,23 +63,24 @@ namespace Kirby
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            
+            if (Keyboard.GetState(PlayerIndex.One).GetPressedKeys().Contains<Keys>(Keys.Escape))
                 this.Exit();
 
-
-            // TODO: Add your update logic here
+            Statemanager.ManagePlayerStates(Player, Keyboard.GetState(PlayerIndex.One).GetPressedKeys());
+            Statemanager.ManageFloorStates(Stage.Terrain, Player, Viewport);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.SkyBlue);
+            GraphicsDevice.Clear(Color.LightGreen);
             Spritebatch.Begin();
             
             DrawStage();
+            DrawPlayer();
             Spritebatch.End();
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
@@ -84,6 +89,11 @@ namespace Kirby
         {
             foreach (GameObject terrain in Stage.Terrain)
                 Spritebatch.Draw(terrain.Sprite, terrain.Position, Color.White);
+        }
+
+        public void DrawPlayer()
+        {
+            Spritebatch.Draw(Player.Sprite, Player.Position, Color.White);
         }
     }
 }
