@@ -22,6 +22,9 @@ namespace Kirby
         GameObject Player;
         Stage Stage;
 
+        Sprite Enemy;
+        Sprite Enemy2;
+
         public KirbyGame()
         {
             Graphics = new GraphicsDeviceManager(this);
@@ -30,7 +33,13 @@ namespace Kirby
 
         protected override void Initialize()
         {
-            base.Initialize();
+            Enemy = new Sprite();
+            Enemy.scale = 1.0f;
+
+            Enemy2 = new Sprite();
+            Enemy2.scale = 1.0f;
+
+            base.Initialize();        
         }
 
         protected override void LoadContent()
@@ -43,11 +52,17 @@ namespace Kirby
                Graphics.GraphicsDevice.Viewport.Width,
                Graphics.GraphicsDevice.Viewport.Height);
 
+            //Loading and positioning the enemies
+            Enemy.LoadContent(this.Content, "Sprites\\enemy"); //O tambien a [...]\\Dropbox\\Sprites\\enemy
+            Enemy.Position = new Vector2(300, 370);
+            Enemy2.LoadContent(this.Content, "Sprites\\enemy");
+            Enemy2.Position = new Vector2(550, 220);
+
             // TODO: use this.Content to load your game content here
             Player = new GameObject(new Vector2(0, 0), Content.Load<Texture2D>("Sprites\\Terrain\\Grass"));
 
             GameLoader loader = new GameLoader(this.Content);
-            this.Stage = loader.LoadStage("C:\\Users\\Fofo\\Documents\\Visual Studio 2010\\Projects\\Kirby\\Kirby\\KirbyContent\\GamePropeties\\Stage1.txt", this.Viewport);
+            this.Stage = loader.LoadStage("C:\\Users\\user\\Dropbox\\Sprites\\GamePropeties\\Stage1.txt", this.Viewport);
 
         }
 
@@ -59,7 +74,7 @@ namespace Kirby
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape) == true)
                 this.Exit();
 
 
@@ -72,6 +87,9 @@ namespace Kirby
         {
             GraphicsDevice.Clear(Color.SkyBlue);
             Spritebatch.Begin();
+
+            Enemy.Draw(this.Spritebatch);
+            Enemy2.Draw(this.Spritebatch);
             
             DrawStage();
             Spritebatch.End();
