@@ -51,20 +51,14 @@ namespace Kirby
                Graphics.GraphicsDevice.Viewport.Width,
                Graphics.GraphicsDevice.Viewport.Height);
 
-            //Loading and positioning the enemies
-            /*Enemy.LoadContent(this.Content, "Sprites\\enemy"); //O tambien a [...]\\Dropbox\\Sprites\\enemy
-            Enemy.Position = new Vector2(300, 370);
-            Enemy2.LoadContent(this.Content, "Sprites\\enemy");
-            Enemy2.Position = new Vector2(550, 220);*/
-
-            // TODO: use this.Content to load your game content here
-
             GameLoader loader = new GameLoader(this.Content);
             Manager = new StateManager();
 
             this.Stage = loader.LoadStage("GameProperties\\Stage1.txt", this.Viewport);
             Player = new Character(Stage.StartPosition, Content.Load<Texture2D>("Sprites\\Kirby\\KirbyStandingR"));
             Player.Move(0, -Player.Height);
+            Player.MaxHealth = Player.CurrentHealth = 100;
+            Player.ContactDamage = 10;
 
         }
 
@@ -77,11 +71,10 @@ namespace Kirby
             if (Keyboard.GetState(PlayerIndex.One).GetPressedKeys().Contains<Keys>(Keys.Escape))
                 this.Exit();
 
-            Manager.ManagePlayerStates(Player, Keyboard.GetState(PlayerIndex.One).GetPressedKeys());
+            Manager.ManagePlayerStates(Player, Keyboard.GetState(PlayerIndex.One).GetPressedKeys(), Stage.Height);
             Manager.ManageEnemyStates(Stage.Terrain, Stage.Enemies, Player);
             Manager.ManageFloorStates(Stage.Terrain, Player, ref Viewport);
             Manager.ManageViewPortStates(Stage, Player, ref Viewport);
-            //Stage.ScreenDisplacement.X -= 2;
             base.Update(gameTime);
         }
 
@@ -89,9 +82,6 @@ namespace Kirby
         {
             GraphicsDevice.Clear(Color.LightGreen);
             Batch.Begin();
-
-            //Enemy.Draw(this.Spritebatch);
-            //Enemy2.Draw(this.Spritebatch);
             
             DrawStage();
             DrawEnemies();
@@ -110,13 +100,16 @@ namespace Kirby
 
         public void DrawPlayer()
         {
-            Batch.Draw(Player.Sprite, Vector2.Add(Player.Position,Stage.ScreenDisplacement), Color.White);
+            Batch.Draw(Player.Sprite, Vector2.Add(Player.Position,Stage.ScreenDisplacement), 
+                Color.White);
         }
 
         public void DrawEnemies()
         {
             foreach (Enemy enemy in Stage.Enemies)
-                Batch.Draw(enemy.Sprite, Vector2.Add(enemy.Position, Stage.ScreenDisplacement), Color.White);
+                if(enemy.HasState(State.ALIVE))
+                    Batch.Draw(enemy.Sprite, Vector2.Add(enemy.Position, Stage.ScreenDisplacement), 
+                        Color.White);
         }
 
         public void DrawStats()
@@ -124,6 +117,7 @@ namespace Kirby
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Player.Center.X.ToString() + "," + Player.Center.Y.ToString(), new Vector2(0, 0), Color.Blue);
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Viewport.Center.X.ToString(), new Vector2(0, 20), Color.Blue);
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Stage.ScreenDisplacement.X.ToString(), new Vector2(0, 40), Color.Blue);
+            Batch.DrawString(Content.Load<SpriteFont>("elFont"), Player.CurrentHealth.ToString(), new Vector2(0, 60), Color.Blue);
         }
     }
 }

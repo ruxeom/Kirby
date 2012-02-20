@@ -102,6 +102,7 @@ namespace Kirby
         {
             AddState(State.STANDING);
             AddState(State.FACERIGHT);
+            AddState(State.ALIVE);
         }        
 
     }

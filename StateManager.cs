@@ -19,10 +19,21 @@ namespace Kirby
  
         }
 
-        public void ManagePlayerStates(Character player, Keys[] pressedkeys)
+        public void ManagePlayerStates(Character player, Keys[] pressedkeys, int stagelimit)
         {
+            if (player.HasState(State.DYING))
+                return;
+
+
+            if (player.CurrentHealth <= 0 || player.Position.Y > stagelimit)
+            {
+                player.CurrentHealth = 0;
+                player.AddState(State.ALIVE);
+                player.AddState(State.DYING);
+                return;
+            }
+
             int dx = 0, dy = 0;
-            
             //Here we manage Horizontal movement
             if (pressedkeys.Contains<Keys>(Keys.Left))
             {
@@ -53,11 +64,11 @@ namespace Kirby
                         player.AddState(State.FALLING);
                     }
                     else
-                        dy -= 10;
+                        dy -= 15;
                 }
                 if (player.HasState(State.STANDING))
                 {
-                    player.MaxHeight = ((int)player.Position.Y - 250);
+                    player.MaxHeight = ((int)player.Position.Y - 200);
                     if (player.MaxHeight < 0)
                         player.MaxHeight = 0;
                     player.RemoveState(State.STANDING);
@@ -81,6 +92,24 @@ namespace Kirby
         public void ManageEnemyStates(List<GameObject> terrain, List<Enemy> enemies, Character player)
         {
             //TODO: Manage player/enemy interaction and enemy states.
+            foreach (Enemy enemy in enemies)
+            {
+                if (enemy.HasState(State.ALIVE) && player.BoundingBox.Intersects(enemy.BoundingBox))
+                {
+                    int dx = (int)(player.Center.X - enemy.Center.X);
+                    enemy.CurrentHealth -= player.ContactDamage;
+                    player.CurrentHealth -= enemy.ContactDamage;
+
+                    enemy.Position.X -= dx;
+                    player.Position.X += dx;
+
+                    if (enemy.CurrentHealth <= 0)
+                    {
+                        enemy.RemoveState(State.ALIVE);
+                        enemy.AddState(State.DYING);
+                    }
+                }
+            }
         }
 
         public void ManageFloorStates(List<GameObject> terrain, Character player, ref Rectangle viewport)
