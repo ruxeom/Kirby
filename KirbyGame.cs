@@ -20,6 +20,8 @@ namespace Kirby
         Rectangle Viewport;
         Character Player;
         Stage Stage;
+        Texture2D healthbar;
+
 
         /*Sprite Enemy;
         Sprite Enemy2;*/
@@ -55,10 +57,11 @@ namespace Kirby
             Manager = new StateManager();
 
             this.Stage = loader.LoadStage("GameProperties\\Stage1.txt", this.Viewport);
-            Player = new Character(Stage.StartPosition, Content.Load<Texture2D>("Sprites\\Kirby\\KirbyStandingR"));
+            Player = new Character(Stage.StartPosition, Content.Load<Texture2D>("Sprites\\Kirby\\KirbyStanding"));
             Player.Move(0, -Player.Height);
             Player.MaxHealth = Player.CurrentHealth = 100;
             Player.ContactDamage = 10;
+           
 
         }
 
@@ -117,7 +120,22 @@ namespace Kirby
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Player.Center.X.ToString() + "," + Player.Center.Y.ToString(), new Vector2(0, 0), Color.Blue);
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Viewport.Center.X.ToString(), new Vector2(0, 20), Color.Blue);
             Batch.DrawString(Content.Load<SpriteFont>("elFont"), Stage.ScreenDisplacement.X.ToString(), new Vector2(0, 40), Color.Blue);
-            Batch.DrawString(Content.Load<SpriteFont>("elFont"), Player.CurrentHealth.ToString(), new Vector2(0, 60), Color.Blue);
+        
+            //Loads the healtbar Sprite
+            healthbar =  Content.Load<Texture2D>("Sprites\\HealthBar");
+       
+            //Negative space for the health bar
+            Batch.Draw(healthbar, new Rectangle(320, 15, healthbar.Width, 44), 
+                new Rectangle(0, 45, healthbar.Width, 44), Color.Gray);
+
+            //Ccurrent health level based on the current Health
+            Batch.Draw(healthbar, new Rectangle(320, 15, (int)(healthbar.Width * ((double)Player.CurrentHealth / 100)), 44),
+                 new Rectangle(0, 45, healthbar.Width, 44), Color.Red);
+
+            //Box around the health bar
+            Batch.Draw(healthbar, new Rectangle(320, 15, healthbar.Width, 44), 
+                new Rectangle(0, 0, healthbar.Width, 44), Color.White);
+           
         }
     }
 }
